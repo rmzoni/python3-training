@@ -41,5 +41,5 @@ total_de_elementos = len(teste_dados)
 
 taxa_de_acerto = 100.0 * total_de_acertos / total_de_elementos
 
-print(taxa_de_acerto)
-print(total_de_elementos)
+print taxa_de_acerto
+print total_de_elementos
