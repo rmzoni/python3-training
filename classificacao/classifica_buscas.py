@@ -80,7 +80,7 @@ else:
 
 teste_real(vencedor, validacao_dados, validacao_marcacoes)
 
-acerto_base = max(Counter(validacao_marcacoes).itervalues())
+acerto_base = max(Counter(validacao_marcacoes).values())
 taxa_de_acerto_base = 100.0 * acerto_base / len(validacao_marcacoes)
 print("Taxa de acerto base: %f" % taxa_de_acerto_base)
 
