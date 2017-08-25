@@ -190,3 +190,18 @@ nums = [1, 2, 3, 4, 5]
 s = sum(x * x for x in nums)
 print(s)
 
+
+
+def mexFunction(s, upperBound):
+    found = -1
+    for i in range(upperBound):
+        if not i in s:
+            found = i
+            break
+    else:
+        found = upperBound
+
+    return found
+
+def convertTabs(code, x):
+    return code.replace('\t', ''.join([' ' for a in range(x)]))
