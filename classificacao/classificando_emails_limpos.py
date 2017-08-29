@@ -5,8 +5,9 @@ from collections import Counter
 import numpy as np
 from sklearn.cross_validation import cross_val_score
 import nltk
-nltk.download('stopwords:portuguese')
-nltk.download('rslp')
+#nltk.download('stopwords')
+#nltk.download('rslp')
+#nltk.download("punkt")
 
 texto1 = "Se eu comprar cinco anos antecipados, eu ganho algum desconto?"
 texto2 = "O exercício 15 do curso de Java 1 está com a resposta errada. Pode conferir pf?"
@@ -15,14 +16,15 @@ texto3 = "Existe algum curso para cuidar do marketing da minha empresa?"
 
 classificacoes = pd.read_csv('emails.csv', encoding = 'utf-8')
 textosPuros = classificacoes['email']
-textosQuebrados = textosPuros.str.lower().str.split(' ')
+frases = textosPuros.str.lower()
+textosQuebrados = [nltk.tokenize.word_tokenize(frase) for frase in frases]
 
 stopwords = nltk.corpus.stopwords.words('portuguese')
 stemmer = nltk.stem.RSLPStemmer()
 dicionario = set()
 
 for lista in textosQuebrados:
-    validas = [stemmer.stem(palavra) for palavra in lista if palavra not in stopwords and len(palavra) > 0]
+    validas = [stemmer.stem(palavra) for palavra in lista if palavra not in stopwords and len(palavra) > 2]
     dicionario.update(validas)
 
 totalDePalavras = len(dicionario)
@@ -30,17 +32,19 @@ tuplas = zip(dicionario, range(totalDePalavras))
 tradutor = {palavra: indice for palavra, indice in tuplas}
 
 
-def vetorizar_texto(texto, tradutor):
+def vetorizar_texto(texto, tradutor, stemmer):
     vetor = [0] * len(tradutor)
     for palavra in texto:
-        if palavra in tradutor:
-            posicao = tradutor[palavra]
-            vetor[posicao] += 1
+        if len(palavra) > 0:
+            raiz = stemmer.stem(palavra)
+            if raiz in tradutor:
+                posicao = tradutor[raiz]
+                vetor[posicao] += 1
 
     return vetor
 
 
-vetoresDeTexto = [vetorizar_texto(texto, tradutor)
+vetoresDeTexto = [vetorizar_texto(texto, tradutor, stemmer)
                   for texto in textosQuebrados]
 marcas = classificacoes['classificacao']
 
